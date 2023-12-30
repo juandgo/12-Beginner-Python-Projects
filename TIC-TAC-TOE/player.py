@@ -12,7 +12,7 @@ class Player:
     
 class RandomComputerPlayer(Player):
     def __init__(self, letter):
-        supper().__init__(self, letter)
+        super().__init__(letter)
     
     def get_move(self, game):
         # get a random valid spot for our next move
@@ -21,7 +21,7 @@ class RandomComputerPlayer(Player):
 
 class HumanPlayer(Player):
     def __init__(self, letter):
-        supper().__init__(self, letter)
+        super().__init__(letter)
         
     def get_move(self, game):
         valid_square = False
