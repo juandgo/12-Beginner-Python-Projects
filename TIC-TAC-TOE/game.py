@@ -41,7 +41,15 @@ class TicTacToe:
             return True
         return False
         
+    def winner(self, square, letter):
+        # winner if 3 in a row anywhere.. we have to check all of these !
+        # first let's check the row
+        row_ind = square // 3
+        row = self.board[row_ind*3 : (row_ind + 1)*3]
+        if all([spot == letter for spot in row])
+    
 def play(game, x_player, o_player, print_game=True):
+    # returns the winner of the game(the letter)! or None for a tie
     if print_game:
         game.print_board_nums()
     letter = 'X'# starting letter
@@ -60,12 +68,18 @@ def play(game, x_player, o_player, print_game=True):
                 print(letter+f' makes a move to square {square}')
                 game.print_board()
                 print(' ') # just empty line
+                
+            if game.current_winner:
+                if print_game:
+                    print(letter+' wins! ')
+                return letter
             
             # after we made our move, we need to alternate letters
-            letter = 'O' if letter == 'X' else 'X'
+            letter = 'O' if letter == 'X' else 'X' # switches player
             # if letter == 'X':
             #     letter = 'O'
             # else:
             #     letter = 'X'
                 
-            # BUT WHAT IF WE WON??
+        if print_game:
+            print('It\'s a tie')        
