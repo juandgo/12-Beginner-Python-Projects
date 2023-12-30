@@ -8,7 +8,7 @@ class TicTacToe:
     def print_board(self):
         # this is just getting the row
         for row in [self.board[i*3:(i+1)*3] for i in range(3)]: 
-            print('| '+' |'.join(row)+' |')
+            print('| '+' | '.join(row)+' |')
             
     
     @staticmethod
@@ -16,7 +16,7 @@ class TicTacToe:
         # 0 | 1 | 2 etc (tells us what number corresponds to what box)
         number_board = [[str(i) for i in range(j*3, (j+1)*3)] for j in range(3)]
         for row in number_board:
-            print('| '+ '|'.join(row)+' |')
+            print('| '+ ' | '.join(row)+' |')
             
     def available_moves(self):
         return [i for i, spot in enumerate(self.board) if spot == ' ']
@@ -33,7 +33,7 @@ class TicTacToe:
     def num_empty_squares(self):
         return self.board.count(' ')   
     
-    def make_move(self, sqare, letter):
+    def make_move(self, square, letter):
         # if valid move, then make the move (assign square to letter)
         # then return true. if invalid, return false
         if self.board[square] == ' ':
@@ -53,7 +53,7 @@ class TicTacToe:
 
         # check column
         col_ind = square % 3
-        column = [self.board[column_ind+i*3] for i in range(3)]
+        column = [self.board[col_ind+i*3] for i in range(3)]
         if all([spot == letter for spot in column]):
             return True
         
@@ -61,10 +61,10 @@ class TicTacToe:
         # but only if the square is an even number (0, 2, 4, 6, 8)
         # these are the only moves possible to win a diagonal
         if square % 2 == 0:
-            diagonal1 = [self.board[i] for i in range[0, 4, 8]] # left to right diagonal
+            diagonal1 = [self.board[i] for i in [0, 4, 8]] # left to right diagonal
             if all([spot == letter for spot in diagonal1]):
                 return True
-            diagonal1 = [self.board[i] for i in range[2, 4, 6]] # right to left diagonal
+            diagonal2 = [self.board[i] for i in [2, 4, 6]] # right to left diagonal
             if all([spot == letter for spot in diagonal2]):
                 return True
         # if all of these checks fail 
@@ -103,8 +103,8 @@ def play(game, x_player, o_player, print_game=True):
             # else:
             #     letter = 'X'
                 
-        if print_game:
-            print('It\'s a tie')        
+    if print_game:
+        print('It\'s a tie')        
             
 if __name__ == '__main__':
     x_player = HumanPlayer('X')
