@@ -1,4 +1,5 @@
 import random
+import re
 # lets create a board object to represent the minesweeper game
 # this is so that we can just say "create a new board object", or
 # "dig here", or "render this game for this object"
@@ -36,7 +37,7 @@ class Board:
             row = loc // self.dim_size # we want the number of times dim_size goes into loc to tell us
             col = loc % self.dim_size # we want the remainder to tell us what index in that row to look
             
-            if board[row][col] == '*';
+            if board[row][col] == '*':
                 # this means we've actually planted a bomb there already so keep going
                 continue
             board[row][col] = '*' # plant the bomb
@@ -105,7 +106,7 @@ class Board:
         # return a string that shows the board to the player
         
         # first let's create a new array that represents what the user would see
-        visible_board = [[None for _ in range(self.dim_size) for _ in range(self.dim_size)]]
+        visible_board = [[None for _ in range(self.dim_size)] for _ in range(self.dim_size)]
         for row in range(self.dim_size):
             for col in range(self.dim_size):
                 if (row, col) in self.dug:
@@ -114,8 +115,19 @@ class Board:
                     visible_board[row][col] = ' '
         
         # put this together in a string
-        
-        indices_row = 
+        string_rep = ''
+        # get max column widths for printing
+        widths = []
+        for idx in range(self.dim_size):
+            columns = map(lambda x: x[idx], visible_board)
+            widths.append(
+                len(
+                    max(columns, key = len)
+                )
+            )
+        # print the csv strings
+        indices = [i for i in range(self.dim_size)]
+        indices_row = '  '
         cells = []
         
         for idx, col in enumerate(indices):
@@ -130,8 +142,10 @@ class Board:
             cells = []
             for idx, col in enumerate(row):
                 format = '%-' + str(widths[idx]) + 's'
-            indices_rep += ' |'.join(cells)
-            indices_rep += ' |\n'    
+            string_rep += ' |'.join(cells)
+            string_rep += ' |\n'    
+        str_len = int(len(string_rep) / self.dim_size)
+        string_rep = indices_row + '-'*str_len + '\n'+string_rep+'-'*str_len
         
 def play(dim_size=10, num_bombs=10):
     # Step 1: create the board and plant the bombs
@@ -140,3 +154,28 @@ def play(dim_size=10, num_bombs=10):
     # Step 3a: if location is a bomb, show game over message
     # Step 3b: if location is not a bomb, dig recursively until each square next to a bomb
     # Step 4: repeat steps 2 and 3a/b until there are no more places to dig -> VCTORY
+    safe = True
+    while len(board.dug) < board.dim_size ** 2 - num_bombs:
+        print(board)
+        user_input = re.split(',(\\s)*', input("Where would you like to dig? Input as row, col: "))
+        row, col = int(user_input[0]), int(user_input[-1])
+        if row < 0 or row >= board.dim_size or col < 0 or col >= dim_size:
+            print("Invalid location. try again")
+            continue
+        # if it's valid, we dig 
+        safe = board.dig(row, col)
+        if not safe:
+            # dug a bomb ahhh
+            break # (game over rip)
+        
+    # 2 ways to end loop, lets check which one 
+    if safe:
+        print('CONGRATULATIONS!!!! YOU ARE VICTORIUS')
+    else:
+        print('SORRY GAME OVER :(')
+        # let's reveal the whole board!
+        board.dug = [(r, c) for r in range(board.dim_size) for c in range(board.dim_size)]
+        print(board)
+    
+if __name__ == '__main__': # good practice :)
+    play()
